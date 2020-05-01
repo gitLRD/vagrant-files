@@ -72,5 +72,9 @@ Vagrant.configure("2") do |config|
   && chmod +x minikube
      sudo mkdir -p /usr/local/bin/
      sudo install minikube /usr/local/bin/
+     yum install conntrack
+     sudo echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+     sudo systemctl enable kubelet
+     
    SHELL
 end
