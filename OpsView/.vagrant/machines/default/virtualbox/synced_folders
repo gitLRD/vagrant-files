@@ -1,0 +1,1 @@
+{"rsync":{"/vagrant":{"type":"rsync","guestpath":"/vagrant","hostpath":"/Users/lewisdesforges/Documents/TechDev/VagrantEnvs/OpsView","disabled":false,"__vagrantfile":true,"owner":"vagrant","group":"vagrant"}}}

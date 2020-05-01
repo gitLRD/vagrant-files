@@ -1,0 +1,98 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.hostmanager.enabled = true
+
+  config.vm.box = "centos/7"
+
+  config.vm.define "master", primary: true do |h|
+        config.vm.provider :virtualbox do |vb|
+      vb.linked_clone = true
+      vb.customize [
+          "modifyvm", :id,"--natdnshostresolver1","on",
+          "--memory", "1024",
+          "--cpus", "4",
+      ]
+    end
+    h.vm.provision "file", source: "~/.ssh/vagrant.pub", destination: "~/.ssh/authorized_keys"
+    h.vm.provision :shell, inline: 'sudo mkdir /root/.ssh/'
+    h.vm.provision :shell, inline: 'sudo echo /home/vagrant/.ssh/vagrant.pub >> /root/.ssh/authorized_keys'
+    h.vm.hostname = "master.openshift.example.com"
+    h.vm.network "private_network", ip: "192.168.0.101"
+    h.vm.provision :shell, inline: 'yum update -y'
+    h.vm.provision :shell, inline: 'yum install -y wget git  nano net-tools docker-1.13.1 bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct openssl-devel httpd-tools NetworkManager python-cryptography python-devel python-passlib java-1.8.0-openjdk-headless "@Development Tools"'
+    h.vm.provision :shell, inline: 'systemctl enable NetworkManager'
+    h.vm.provision :shell, inline: 'systemctl start docker && systemctl enable docker && systemctl status docker'
+    h.vm.provision :shell, inline: 'reboot'
+end
+
+  config.vm.define "infra", primary: true do |h|
+    config.vm.provider :virtualbox do |vb|
+      vb.linked_clone = true
+      vb.customize [
+          "modifyvm", :id,"--natdnshostresolver1","on",
+          "--memory", "1024",
+          "--cpus", "4",
+      ]
+    end
+    h.vm.provision "file", source: "~/.ssh/vagrant.pub", destination: "~/.ssh/authorized_keys"
+    h.vm.provision :shell, inline: 'sudo mkdir /root/.ssh/'
+    h.vm.provision :shell, inline: 'sudo echo /home/vagrant/.ssh/vagrant.pub >> /root/.ssh/authorized_keys'
+    h.vm.network "private_network", ip: "192.168.0.102"
+    h.vm.hostname = "infra.openshift.example.com"
+    h.vm.provision :shell, inline: 'yum update -y'
+    h.vm.provision :shell, inline: 'systemctl enable NetworkManager'
+    h.vm.provision :shell, inline: 'yum install -y wget git  nano net-tools docker-1.13.1 bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct openssl-devel httpd-tools NetworkManager python-cryptography python-devel python-passlib java-1.8.0-openjdk-headless "@Development Tools"'
+    h.vm.provision :shell, inline: 'systemctl start docker && systemctl enable docker && systemctl status docker'
+    h.vm.provision :shell, inline: 'reboot'
+end
+
+  config.vm.define "node1", primary: true do |h|
+
+    config.vm.provider :virtualbox do |vb|
+      vb.linked_clone = true
+      vb.customize [
+          "modifyvm", :id,"--natdnshostresolver1","on",
+          "--memory", "1024",
+          "--cpus", "4",
+      ]
+    end
+    h.vm.provision "file", source: "~/.ssh/vagrant.pub", destination: "~/.ssh/authorized_keys"
+    h.vm.provision :shell, inline: 'sudo mkdir /root/.ssh/'
+    h.vm.provision :shell, inline: 'sudo echo /home/vagrant/.ssh/vagrant.pub >> /root/.ssh/authorized_keys'
+    h.vm.network "private_network", ip: "192.168.0.103"
+    h.vm.hostname = "node1.openshift.example.com"
+    h.vm.provision :shell, inline: 'yum update -y'
+    h.vm.provision :shell, inline: 'yum install -y wget git  nano net-tools docker-1.13.1 bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct openssl-devel httpd-tools NetworkManager python-cryptography python-devel python-passlib java-1.8.0-openjdk-headless "@Development Tools"'
+    h.vm.provision :shell, inline: 'systemctl enable NetworkManager'
+    h.vm.provision :shell, inline: 'systemctl start docker && systemctl enable docker && systemctl status docker'
+    h.vm.provision :shell, inline: 'reboot'
+end
+
+  config.vm.define "node2", primary: true do |h|
+    config.vm.provider :virtualbox do |vb|
+      vb.linked_clone = true
+      vb.customize [
+          "modifyvm", :id,"--natdnshostresolver1","on",
+          "--memory", "1024",
+          "--cpus", "4",
+      ]
+    end
+    h.vm.provision "file", source: "~/.ssh/vagrant.pub", destination: "~/.ssh/authorized_keys"
+    h.vm.provision :shell, inline: 'sudo mkdir /root/.ssh/'
+    h.vm.provision :shell, inline: 'sudo echo /home/vagrant/.ssh/vagrant.pub >> /root/.ssh/authorized_keys'
+    h.vm.network "private_network", ip: "192.168.0.104"
+    h.vm.hostname = "node2.openshift.example.com"
+    h.vm.provision :shell, inline: 'yum update -y'
+    h.vm.provision :shell, inline: 'yum install -y wget git  nano net-tools docker-1.13.1 bind-utils iptables-services bridge-utils bash-completion kexec-tools sos psacct openssl-devel httpd-tools NetworkManager python-cryptography python-devel python-passlib java-1.8.0-openjdk-headless "@Development Tools"'
+    h.vm.provision :shell, inline: 'systemctl enable NetworkManager'
+    h.vm.provision :shell, inline: 'systemctl start docker && systemctl enable docker && systemctl status docker'
+    h.vm.provision :shell, inline: 'reboot'
+end
+
+end

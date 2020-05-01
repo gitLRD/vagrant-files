@@ -1,0 +1,17 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = 'dummy'
+  config.vm.box_url = 'dummy.box'
+
+  config.vm.provider :vsphere do |vsphere|
+    vsphere.host = 'vcenter.lrdlab'
+    vsphere.compute_resource_name = 'LRDClu'
+    vsphere.template_name = 'TestTemplate'
+    vsphere.name = 'Test Vagrant'
+    vsphere.user = 'administrator@vsphere.local'
+    vsphere.password = 'WillowDoggle57@Home'
+    vsphere.insecure = true
+  end
+end
