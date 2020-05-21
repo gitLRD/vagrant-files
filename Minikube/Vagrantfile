@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "geerlingguy/centos7"
    config.vm.provider "virtualbox" do |vb|
   #   vb.gui = true
-     vb.memory = "6144"
+     vb.memory = "4096"
      vb.cpus = 4
    end
    
@@ -13,14 +13,15 @@ Vagrant.configure("2") do |config|
      curl -fsSL https://get.docker.com -o get-docker.sh
      sudo sh get-docker.sh
      sudo usermod -aG docker vagrant
-     curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
-  && chmod +x minikube
+     su - vagrant     
+     curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+     chmod +x minikube
      sudo mkdir -p /usr/local/bin/
      sudo install minikube /usr/local/bin/
-     yum install conntrack,kubernetes-client
-     sudo minikube start --driver=none
-     sudo echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
-     sudo systemctl enable kubelet
-     sudo minikube start --driver=none
+     echo "installed minikube"
+     sudo yum install -y conntrack
+     sudo yum install -y kubernetes-client
+     systemctl start docker
+     systemctl enable docker
    SHELL
 end
